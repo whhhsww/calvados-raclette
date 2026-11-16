@@ -162,6 +162,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .hero-copy{justify-content:flex-end;padding-bottom:72px}
   .hero h1{margin:10px 0 14px}
   .search{max-width:none;margin-left:0;width:100%}
+  .hint{display:none}
   .it .th{width:58px;height:58px}
 }
 @media(max-width:460px){.pop{grid-template-columns:1fr}.cgrid{grid-template-columns:1fr}.cta .btn{flex:1}}
@@ -776,7 +777,7 @@ const NP=120,sp=new Float32Array(NP*3),life=new Float32Array(NP);
 function resetP(i,init){sp[i*3]=rnd(-1.3,1.3);sp[i*3+1]=faceC.y+rnd(-.1,.25);sp[i*3+2]=faceC.z+rnd(0,.45);life[i]=init?Math.random():0;}
 for(let i=0;i<NP;i++)resetP(i,true);
 const spGeo=new THREE.BufferGeometry();spGeo.setAttribute('position',new THREE.BufferAttribute(sp,3));
-const steam=new THREE.Points(spGeo,new THREE.PointsMaterial({map:puffTex,size:.7,transparent:true,opacity:.025,depthWrite:false,blending:THREE.AdditiveBlending,color:0xffe7cc}));
+const steam=new THREE.Points(spGeo,new THREE.PointsMaterial({map:puffTex,size:.7,transparent:true,opacity:.015,depthWrite:false,blending:THREE.AdditiveBlending,color:0xffe7cc}));
 rig.add(steam);
 
 /* ---- post ---- */
@@ -790,7 +791,7 @@ const base=new THREE.Vector3(),look=new THREE.Vector3(0,-.35,0);
 function layout(){
   W=stage.clientWidth;H=stage.clientHeight;const asp=W/H;
   if(asp>1.1){rig.position.set(asp>1.45?2.75:1.8,0,0);camera.fov=27;base.set(0,3.1,10.6);}
-  else{rig.position.set(0,1.05,0);camera.fov=36;base.set(0,3,asp<.7?13.6:11.3);}
+  else{rig.position.set(0,2.35,0);camera.fov=36;base.set(0,3.4,asp<.7?17:13);}
   camera.aspect=asp;camera.updateProjectionMatrix();
   renderer.setSize(W,H);composer.setSize(W,H);bloom.setSize(W,H);
 }
