@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Раклет &amp; Кальвадос — найсирніша ресторація Києва</title>
+<meta name="description" content="Ресторан Раклет & Кальвадос, Київ, вул. Воздвиженська 51А. Швейцарський раклет, сирне фондю, камамбер і кальвадос з Нормандії. Повне меню з цінами.">
+<meta name="theme-color" content="#0b0806">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn-media.choiceqr.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+}}
+</script>
+<style>
+:root{
+  --bg:#0b0806;--bg2:#15100c;--card:#1b1510;
+  --cheese:#f7b500;--cheese2:#ffd35c;--amber:#c8782a;
+  --cream:#f4ebdd;--mute:#a99b88;--line:rgba(244,235,221,.12);
+  --r:18px;--max:1200px;--pad:clamp(16px,4vw,40px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--cream);font:16px/1.55 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--pad)}
+h1,h2,h3{font-family:Unbounded,system-ui,sans-serif;font-weight:700;letter-spacing:-.02em;line-height:1.02}
+h2{font-size:clamp(30px,5vw,56px)}
+.kicker{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--cheese);font-weight:700}
+section{padding-block:clamp(64px,9vw,120px)}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:clamp(26px,4vw,44px)}
+.head p{max-width:44ch;color:var(--mute)}
+
+/* header */
+header{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+header.solid{background:rgba(11,8,6,.88);backdrop-filter:blur(12px);border-bottom-color:var(--line)}
+.bar{display:flex;align-items:center;gap:22px;height:64px}
+.logo{font-family:Unbounded;font-weight:800;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.logo b{color:var(--cheese)}
+nav{display:flex;gap:22px;margin-left:auto}
+nav a{font-size:14px;font-weight:600;color:var(--mute);transition:color .2s}
+nav a:hover{color:var(--cream)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:999px;font-weight:700;font-size:15px;border:1.5px solid rgba(244,235,221,.35);transition:.2s;white-space:nowrap}
+.btn:hover{border-color:var(--cream);background:rgba(244,235,221,.06)}
+.btn.y{background:var(--cheese);border-color:var(--cheese);color:#1a1205}
+.btn.y:hover{background:var(--cheese2);border-color:var(--cheese2)}
+.btn.sm{padding:10px 16px;font-size:14px}
+
+/* hero */
+.hero{position:relative;height:100svh;min-height:600px;overflow:hidden;padding:0;isolation:isolate}
+.stage,.hero-fallback{position:absolute;inset:0}
+.stage{z-index:1;opacity:0;transition:opacity 1.2s ease}
+.stage canvas{display:block;width:100%!important;height:100%!important}
+.gl-on .stage{opacity:1}
+.hero-fallback{z-index:0;background:#0b0806 center/cover no-repeat;transition:opacity 1.2s}
+.hero-fallback::after{content:"";position:absolute;inset:0;background:rgba(11,8,6,.55)}
+.gl-on .hero-fallback{opacity:0}
+.hero-shade{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,rgba(11,8,6,.92) 0%,rgba(11,8,6,.55) 34%,rgba(11,8,6,0) 60%),linear-gradient(0deg,var(--bg) 0%,rgba(11,8,6,0) 22%)}
+.hero-copy{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;justify-content:center;pointer-events:none}
+.hero-copy>*{pointer-events:auto;max-width:560px}
+.hero h1{font-size:clamp(44px,7.4vw,96px);margin:16px 0 20px}
+.hero h1 span{color:var(--cheese)}
+.lead{font-size:clamp(16px,1.6vw,19px);color:#d9cbb6;max-width:42ch}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.hint{position:absolute;left:50%;bottom:22px;z-index:3;transform:translateX(-50%);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:8px}
+.hint::after{content:"";width:1px;height:34px;background:linear-gradient(var(--cheese),transparent);animation:drip 2s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* popular */
+.pop{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.pcard{background:var(--card);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line);transition:transform .35s,border-color .35s}
+.pcard:hover{transform:translateY(-4px);border-color:rgba(247,181,0,.45)}
+.pcard .ph{aspect-ratio:4/3;overflow:hidden;background:#2a2016}
+.pcard img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.pcard:hover img{transform:scale(1.05)}
+.pcard .tx{padding:16px 16px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.pcard .nm{font-weight:700;line-height:1.3}
+.pcard .sb{font-size:13px;color:var(--mute)}
+.pcard .pr{margin-top:auto;font-family:Unbounded;font-weight:700;color:var(--cheese);font-size:20px}
+.ways{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.way{border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;background:linear-gradient(135deg,rgba(247,181,0,.08),transparent 60%)}
+.way h3{font-size:19px;margin-bottom:8px}
+.way p{color:var(--mute);font-size:15px}
+.way .pr{color:var(--cheese);font-weight:700;margin-top:10px;display:block}
+
+/* gallery */
+.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.gal figure{aspect-ratio:2/3;overflow:hidden;border-radius:16px;background:#2a2016}
+/* source thumbnails are 400x400 with the portrait photo letterboxed on white: zoom past the white bars */
+.gal img{width:100%;height:100%;object-fit:cover;transform:scale(1.14);transition:transform .6s}
+.gal figure:hover img{transform:scale(1.2)}
+
+/* calvados */
+#calvados{background:radial-gradient(90% 70% at 85% 30%,rgba(200,120,42,.22),transparent 70%),var(--bg2);border-block:1px solid var(--line)}
+.cv{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,5vw,70px);align-items:center}
+.cv h2 span{color:var(--amber)}
+.cv p{color:#d3c5b0;margin-top:18px;max-width:46ch}
+.cvlist{border-top:1px solid var(--line)}
+.cvrow{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.cvrow b{font-weight:600}
+.cvrow span{color:var(--amber);font-weight:700;white-space:nowrap}
+.cvnote{font-size:13px;color:var(--mute);margin-top:14px}
+
+/* menu */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tab{padding:11px 20px;border-radius:999px;border:1.5px solid var(--line);background:none;cursor:pointer;font-weight:700;font-size:15px;color:var(--mute);transition:.2s}
+.tab.on{background:var(--cheese);border-color:var(--cheese);color:#1a1205}
+.search{flex:1;min-width:200px;max-width:340px;margin-left:auto;padding:11px 18px;border-radius:999px;border:1.5px solid var(--line);background:var(--bg2);outline:none}
+.search:focus{border-color:var(--cheese)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:22px;scrollbar-width:thin;position:sticky;top:64px;z-index:5;background:var(--bg);padding-top:10px}
+.chip{flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;color:#d3c5b0;cursor:pointer;white-space:nowrap}
+.chip:hover{border-color:var(--cheese);color:var(--cream)}
+.cat{margin-top:34px;scroll-margin-top:130px}
+.cat:first-child{margin-top:0}
+.cat h3{font-size:clamp(20px,2.6vw,26px);margin-bottom:6px;display:flex;align-items:baseline;gap:10px}
+.cat h3 small{font-family:Manrope;font-size:13px;color:var(--mute);font-weight:600}
+.cat .cnote{font-size:13px;color:var(--mute);margin-bottom:6px}
+.items{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+.it{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;padding:16px 0;border-bottom:1px solid var(--line)}
+.it .th{width:68px;height:68px;border-radius:12px;object-fit:cover;background:#2a2016}
+.it.noimg{grid-template-columns:1fr auto}
+.it .nm{font-weight:700;line-height:1.3}
+.it .ds{font-size:13.5px;color:var(--mute);margin-top:4px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.it .pr{font-weight:700;color:var(--cheese);white-space:nowrap;font-size:16px}
+.bd{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 7px;border-radius:6px;margin-right:6px;vertical-align:2px}
+.bd.h{background:var(--cheese);color:#1a1205}
+.bd.n{background:#e5482d;color:#fff}
+.empty{color:var(--mute);padding:30px 0}
+.cc{display:inline-block;font:700 10px/1 Manrope,sans-serif;letter-spacing:.06em;padding:3px 5px;border:1px solid rgba(244,235,221,.25);border-radius:5px;color:#d3c5b0;margin-right:7px;vertical-align:2px}
+
+/* contacts */
+.cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cbox{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.cbox .l{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);font-weight:700}
+.cbox .v{font-family:Unbounded;font-weight:700;font-size:clamp(16px,1.7vw,19px);margin-top:10px;line-height:1.3}
+.cbox a.v:hover{color:var(--cheese)}
+.socials{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+footer{border-top:1px solid var(--line);padding-block:34px;color:var(--mute);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+@media(max-width:980px){
+  .pop{grid-template-columns:1fr 1fr}
+  .cv,.ways{grid-template-columns:1fr}
+  .cgrid{grid-template-columns:1fr 1fr}
+  .items{grid-template-columns:1fr}
+  .gal{grid-template-columns:1fr 1fr;gap:8px}
+}
+@media(max-width:760px){
+  nav{display:none}
+  .bar .btn{margin-left:auto}
+  .hero-shade{background:linear-gradient(0deg,var(--bg) 0%,rgba(11,8,6,.9) 30%,rgba(11,8,6,.25) 56%,rgba(11,8,6,0) 75%)}
+  .hero-copy{justify-content:flex-end;padding-bottom:72px}
+  .hero h1{margin:10px 0 14px}
+  .search{max-width:none;margin-left:0;width:100%}
+  .it .th{width:58px;height:58px}
+}
+@media(max-width:460px){.pop{grid-template-columns:1fr}.cgrid{grid-template-columns:1fr}.cta .btn{flex:1}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap bar">
+    <a href="#top" class="logo">Раклет <b>&amp;</b> Кальвадос</a>
+    <nav>
+      <a href="#popular">Популярне</a>
+      <a href="#menu">Меню</a>
+      <a href="#calvados">Кальвадос</a>
+      <a href="#contacts">Контакти</a>
+    </nav>
+    <a class="btn y sm" href="tel:+380979749099">Забронювати</a>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-fallback" style="background-image:url('https://cdn-media.choiceqr.com/prod-eat-calvados-raclette/menu/DpJeukk-LVLwsMh-sGGCScZ.webp')"></div>
+  <div class="stage" id="stage" aria-hidden="true"></div>
+  <div class="hero-shade"></div>
+  <div class="wrap hero-copy">
+    <p class="kicker">Київ · Воздвиженська 51А</p>
+    <h1>Раклет<br><span>&amp;</span> Кальвадос</h1>
+    <p class="lead">Найсирніша ресторація Києва. Швейцарський раклет, який плавлять і зрізають просто з головки сиру, сирне фондю, камамбер з печі та кальвадос із садів Нормандії.</p>
+    <div class="cta">
+      <a class="btn y" href="#menu">Меню та ціни</a>
+      <a class="btn" href="tel:+380979749099">Забронювати стіл</a>
+    </div>
+  </div>
+  <div class="hint">гортайте</div>
+</section>
+
+<section id="popular">
+  <div class="wrap">
+    <div class="head rv">
+      <div><p class="kicker">Що замовляють найчастіше</p><h2>Раклет — серце<br>нашого меню</h2></div>
+      <p>Сир плавиться під нагрівачем, і його зрізають ножем просто на тарілку — до картоплі, корнішонів і томатів. Обирайте сир і формат подачі.</p>
+    </div>
+    <div class="pop" id="pop"></div>
+    <div class="ways rv">
+      <div class="way"><h3>Зріз із голови сиру</h3><p>Половину головки плавлять і зрізають розплавлений шар прямо на тарілку. Видовищно і найкраще смакує в компанії.</p><span class="pr">860–1 080 ₴</span></div>
+      <div class="way"><h3>У модульній сковорідці</h3><p>Порційний раклет, що плавиться у власній маленькій сковорідці. Коли хочеться спробувати самому.</p><span class="pr">340–460 ₴</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="gal rv" id="gal"></div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="wrap">
+    <div class="head rv">
+      <div><p class="kicker">Повне меню</p><h2>Меню та ціни</h2></div>
+      <p>Усі страви й напої з актуальними цінами. Шукайте за назвою або перемикайте розділи.</p>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-tab="kitchen">Кухня</button>
+      <button class="tab" data-tab="drinks">Напої</button>
+      <button class="tab" data-tab="bar">Бар 18+</button>
+      <input class="search" id="q" type="search" placeholder="Пошук: раклет, фондю, кава…" aria-label="Пошук у меню">
+    </div>
+    <div class="chips" id="chips"></div>
+    <div id="list"></div>
+  </div>
+</section>
+
+<section id="calvados">
+  <div class="wrap cv">
+    <div class="rv">
+      <p class="kicker" style="color:var(--amber)">Сонце Нормандії</p>
+      <h2>І трохи <span>кальвадосу</span></h2>
+      <p>Французький яблучний бренді з садів Нормандії: свіжа кислинка яблук, нотки дубових бочок і тепле післясмакування. Ідеальна пара до сиру — і друга половина нашої назви.</p>
+      <p>Від українського «Прикарпатського» до 20-річного Coquerel, а ще коктейлі на кальвадосі: Calvados Sour, Spritz, Tonic.</p>
+      <a class="btn" style="margin-top:24px" href="#menu" data-open="bar">Вся барна карта</a>
+    </div>
+    <div class="rv">
+      <div class="cvlist" id="cvlist"></div>
+      <p class="cvnote">Ціни — як у барній карті закладу.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contacts">
+  <div class="wrap">
+    <div class="head rv"><div><p class="kicker">Чекаємо в гості</p><h2>Контакти</h2></div></div>
+    <div class="cgrid rv">
+      <div class="cbox"><div class="l">Адреса</div><a class="v" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%D0%B2%D1%83%D0%BB.+%D0%92%D0%BE%D0%B7%D0%B4%D0%B2%D0%B8%D0%B6%D0%B5%D0%BD%D1%81%D1%8C%D0%BA%D0%B0+51%D0%90+%D0%9A%D0%B8%D1%97%D0%B2">вул. Воздвиженська, 51А, Київ ↗</a></div>
+      <div class="cbox"><div class="l">Телефон</div><a class="v" href="tel:+380979749099">+38 097 974 90 99</a></div>
+      <div class="cbox"><div class="l">Працюємо</div><div class="v">Щодня<br>10:00–22:00</div></div>
+      <div class="cbox"><div class="l">Пишіть нам</div><a class="v" href="mailto:calvadosju@gmail.com" style="font-size:15px;word-break:break-all">calvadosju@gmail.com</a>
+        <div class="socials">
+          <a class="btn sm" target="_blank" rel="noopener" href="https://www.instagram.com/calvados_raclette_restaurant/">Instagram</a>
+          <a class="btn sm" target="_blank" rel="noopener" href="https://t.me/calvados_raclette_restaurant">Telegram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© Ресторан Раклет &amp; Кальвадос, Київ</span>
+    <span>Демо-концепт сайту · фото та меню з офіційної сторінки закладу</span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+const CDN="https://cdn-media.choiceqr.com/prod-eat-calvados-raclette/";
+const TH=CDN+"menu/thumbnail_";
+/* [name, price, description, image, badge(h=hit,n=new)] */
+const MENU={
+kitchen:[
+["Сніданки",[
+["Вівсянка на кокосовому молоці з сезонними фруктами",280,"Ніжна вівсяна каша на кокосовому молоці з вершковим маслом і свіжими фруктами.","iclUO-CzJea-GpJzb.png"],
+["Шакшука",285,"Яйця, томати, болгарський перець і цибуля в запашному соусі зі спеціями, з хрустким хлібом.","DgMtt-FpspS-myHOu.png"],
+["Англійський сніданок",380,"Яйце пашот, багет, соковиті ковбаски та печериці — ситно, по-британськи.","qmSuW-MeOJq-emVba.jpeg"],
+["Тост з лососем, яйцем пашот та авокадо",420,"Слабосолений лосось, кремовий авокадо та яйце пашот із рідким жовтком.","WZllx-eGICI-SnvDy.png"],
+["Фірмові сирники Calvados",365,"Сирники з домашнього сиру за фірмовим рецептом, зі сметаною та сезонними фруктами.","OReKL-FDypA-KHlFc.png"]]],
+["Салати",[
+["Салат з карамелізованою грушею, креветками та сиром Дор Блю",480,"Креветки, шпинат, карамелізована груша, Дор Блю та волоський горіх.","saPXo-PJChv-CqHHV.png"],
+["Салат зі слабосоленим лососем, авокадо та сиром Дор Блю",540,"Baby leaf, томати чері, авокадо, слабосолений лосось і Дор Блю.","zHDNA-pLNap-rkCDW.png"],
+["Салат Грецький",380,"Томати, огірки, болгарський перець, червона цибуля та оливки.","mFFke-CGnJd-gnDlU.png"],
+["Салат «Цезар» з куркою",420,"Куряче філе, салатний мікс, перепелині яйця, крутони.","RvTrO-nUiJe-goJoR.png"],
+["Салат «Цезар» з креветками",460,"Креветки, салатний мікс, перепелині яйця, золотисті крутони.","bWljG-CveJx-TGETG.png"],
+["Салат з хрусткими баклажанами та фетою",460,"Хрусткі баклажани з легким чилі, томати, фета та марс-цибуля.","QlFtQ-cZQfF-GtDHe.png"],
+["Салат із запеченими овочами та ніжною телячою вирізкою",680,"Салатний мікс, телятина, запечені цукіні, перець і печериці.","nJdtS-ZyYaH-PETZG.png"]]],
+["Холодні закуски",[
+["Слабосолений лосось до пива",420,"Лосось, тим’ян, каперси, лимон.","vIIiq-sXJet-yfMeX.png"],
+["Сет «Хамон & Раклет» — пара для білого вина",680,"Французький раклет із пажитником та хамон.","sereF-AQnGJ-KAeSZ.png"],
+["Сет м’яса до пива",620,"Прошутто, пряна салямі та яловича бастурма.","RrjeJ-eEfqg-lgtnF.png"],
+["Сет преміальних сирів Raclette & Calvados",880,"Добірка сирів, серед них голландський Veldhuyzen Kaas з трюфелем.","LZwKo-xIfUA-gCGpL.jpeg"],
+["Брускета з креветками та авокадо",540,"Підсмажений багет, крем з авокадо, обсмажені креветки, лайм.","zrfTS-eFWnt-OWzIC.png"],
+["Брускета з лососем та авокадо",560,"Багет, авокадо, слабосолений лосось, мікрозелень.","MsQDZ-QhVcE-hCjVl.png"],
+["Брускета з ростбіфом та руколою",570,"Крем-сир, ростбіф, рукола та пармезан на підсмаженому багеті.","GmbsH-JWIuQ-ZcJyF.png"],
+["Тартар із лосося та авокадо",680,"Лосось, стиглий авокадо, лайм і рукола.","OlBDY-pkIFe-bRbFs.png"]]],
+["Раклет бар",[
+["🇨🇭 Раклет Raclette Sapin — зріз із голови сиру",860,"Сир із кантону Юра на північному заході Швейцарії.","xLajy-ksrRA-rlvHI.jpeg"],
+["🇨🇭 Раклет Raclette Sapin — у модульній сковорідці",340,"Сир із кантону Юра на північному заході Швейцарії.","lIGDD-JIebx-jBIpH.jpeg"],
+["🇨🇭 Раклет St. Niklaus — зріз із голови сиру",990,"Альпійський сир з гірських лук кантону Вале.","EEwzA-GsQPV-oGIQE.jpeg"],
+["🇨🇭 Раклет St. Niklaus — у модульній сковорідці",460,"Альпійський сир з гірських лук кантону Вале.","EQvIF-hgdCC-VVDUe.jpeg"],
+["🇫🇷 Раклет Mon a Muu класичний — зріз із голови сиру",890,"Французький напівтвердий сир для плавлення.","NWneF-FnIQX-ODGce.png"],
+["🇫🇷 Раклет Mon a Muu класичний — у модульній сковорідці",390,"Французький напівтвердий сир для плавлення.","vlvWG-rbRzW-jHUtg.jpeg"],
+["🇫🇷 Раклет з пажитником — зріз із голови сиру",1080,"Натуральна скоринка, рідкісний пажитник і 4 місяці витримки.","THgCk-lvTtY-slQxx.jpeg"],
+["🇫🇷 Раклет з пажитником — у модульній сковорідці",440,"Натуральна скоринка, рідкісний пажитник і 4 місяці витримки.","WAVbD-lBLth-MLmZE.jpeg"],
+["Додаток до сиру Раклет № 1",280,"Запечена картопля, томати чері, солоні огірки.","alTCL-nbQgd-DcAZg.jpeg"],
+["Додаток до сиру Раклет № 2",350,"Картопля з беконом, печериці, солоні огірки.","UXoVq-oQHru-KQqAo.jpeg"],
+["Додаток до сиру Раклет № 3",380,"Картопля, прошутто, хліб-гриль, солоні огірки.","FFGmI-KpdiG-kCsfp.jpeg"],
+["Додатки до раклету, фондю, камамбера та Ofenkäse","від 65","Курка, бекон, телятина, креветки та інше — порціями по 50 г на вибір.","kGDxr-kXvgy-GDeHd.jpeg"],
+["Раклет у паніровці",420,"Raclette nature у золотистій паніровці, всередині тане.","RgHHE-CGYIl-IBGYf.jpeg"],
+["Грінки до пива з сиром Раклет",160,"Темний хліб під шапочкою Raclette nature.","UaaJk-tjIdh-ezDJP.png"],
+["🇨🇭 Крем-суп з сиром Raclette Sapin",380,"Вершковий суп на швейцарському сирі.","pkTHa-nwbHb-UhlEe.jpeg"],
+["«Солодка спокуса з раклетом»",440,"Ванільне морозиво, теплий розплавлений раклет і карамель.","TBdVG-qdZfr-JKWMF.jpeg"]]],
+["Фондю",[
+["🇨🇭 Фондю Appenzeller, 400 г",1680,"Швейцарське сирне фондю преміум-класу з кантону Аппенцелль.","FWAoL-UkCTC-MzKrK.jpeg"],
+["🇨🇭 Фондю Emmi Original, 400 г",1380,"Автентична швейцарська рецептура, вершково-горіховий смак.","vWASr-TvFji-boevL.jpeg"],
+["🇨🇭 Фондю Emmi Original, 200 г",740,"Автентична швейцарська рецептура, вершково-горіховий смак.","eJUHa-PQLhh-wjSub.jpeg"],
+["🇨🇭 Фондю L’Original Hardegger, 400 г",1360,"Класика Альп від Hardegger Käse AG.","Gdsei-EqygA-jfEKa.jpeg"],
+["🇨🇭 Фондю L’Original Hardegger, 200 г",680,"Класика Альп від Hardegger Käse AG.","nIuqO-euFJC-zDenH.jpeg"],
+["🇨🇭 Фондю L’Original без алкоголю, 400 г",1350,"Класичний швейцарський рецепт без вина.","JglnB-QrSfy-PyURY.jpeg"],
+["🇫🇷 Фондю La Fondue — Pâturages Comtois, 250 г",595,"Ніжне сирне фондю з регіону Франш-Конте.","UQnVB-HfaFJ-bsseY.jpeg"],
+["Дошка з додатками до фондю",1180,"Хрусткі, ніжні й соковиті шматочки, щоб вмочати в сир.","CdZFb-kBReA-FVkTe.png"]]],
+["Гарячі закуски",[
+["Млинець із сиром Раклет та шампіньйонами",360,"Розплавлений раклет, обсмажені шампіньйони та бекон.","kURev-tIAbg-RmEYM.jpeg"],
+["Донат з сиром Раклет і моцарелою",480,"Хрусткий донат із тягучим раклетом і моцарелою всередині.","HUCHw-nOOjC-refWF.png"],
+["🇩🇪 Камамбер Ofenkäse у печі з грінками, 200 г",680,"Запечений до золотистої скоринки, з кремовою серединкою.","jPloc-RmISG-cIiDg.jpeg"],
+["🇩🇪 Камамбер Ofenkäse у печі з грінками, 400 г",990,"Запечений до золотистої скоринки, з кремовою серединкою.","kxBvS-lzHwO-RrJeT.jpeg"],
+["🇫🇷 Камамбер Le Fondant Chaud, 200 г",750,"Вершковий французький камамбер, запечений до ідеальної м’якості.","gQKHc-HlzVI-pGIGm.jpeg"],
+["Баварські ковбаски з картоплею фрі та печерицями",480,"Подаються на сковорідці з болгарським перцем.","YGcbC-JFVTT-eSHIF.png"],
+["Курячі крильця «Special Calvados»",360,"У медово-пряному соусі з ноткою шрірача та кунжутом.","DsMvy-GEwxR-AWbIU.png"],
+["Деруни з беконом і пармезаном",460,"З вершковим соусом, печерицями, беконом і пармезаном.","swbPp-jPwdC-OKTJO.png"],
+["Деруни з лососем і крем-сиром",480,"Хрусткі деруни, крем-сир і слабосолений лосось.","AfYDV-lJVDJ-DCbJM.png"],
+["Сирні палички з моцарелою та раклетом",440,"Тягуча моцарела і швейцарський раклет у хрусткій скоринці.","RFEFt-GDQGA-KuVbo.png"],
+["Креветки в паніровці панко з соусом Sweet Chili",420,"Хрусткі золотисті креветки з пікантним соусом.","tVQIo-baSyU-ILgGz.png"],
+["Ситне асорті запеченого м’яса з овочами",880,"Курка, свинина й теляча вирізка з печеними овочами.","NPgFH-ZJTpk-hFUyF.png"]]],
+["Бургери",[
+["Жульєн-бургер з сиром Raclette Vermont",380,"Бріош, французький жульєн і розплавлений раклет.","PCrfw-niMuC-kkznK.png","h"],
+["Бургер з криспі куркою",390,"Хрусткий курячий шніцель, мариновані огірки, мікс салату.","iRiTU-ZgRDj-WlUWu.png"],
+["Чизбургер класичний",420,"Котлета з телятини, салат, томат, маринований огірок.","RlYpw-uLFsl-HXndH.png"],
+["Картопля по-селянськи до бургера",150,"Запечена з вершковим маслом і спеціями.","AwyZi-vezJo-RFnYO.png"],
+["Картопля фрі до бургера",150,"Золотиста і хрустка.","GIJNl-nnkBc-wHvRJ.png"]]],
+["Перші страви",[
+["Борщ український на ребрах",360,"З бородинським хлібом, синьою цибулею і намазкою зі сала.","UPsSk-QuZMB-Ckxkb.png"],
+["Норвезький суп",380,"Вершковий суп з лососем, креветками та мідіями.","rvuOF-FwWXd-nbjWe.png"],
+["Курячий бульйон з локшиною",280,"З куркою, перепелиними яйцями та домашньою локшиною.","CTCpy-pZpnD-YVXnz.png"],
+["Крем-суп з печерицями",310,"Свіжі печериці, цибуля, вершки.","DcCrH-kxbwF-esdyQ.png"],
+["🇨🇭 Ніжний крем-суп з сиром Раклет",380,"Вершки, швейцарський Raclette і нотка копченої паприки.","ysZCn-ZGUgo-LJgeS.png"],
+["Гарбузовий крем-суп із прошутто та гріссіні",340,"Гарбуз, вершки, мускатний горіх, прошутто.","PqxMh-KxGDc-tEsGN.jpeg"]]],
+["Основні страви",[
+["Паста з чорнилами каракатиці та морепродуктами від шефа",580,"Спагеті на чорнилі каракатиці з креветками та мідіями.","AvGPe-jmbbG-JkAke.png","h"],
+["Соте з морепродуктів під сиром Раклет",640,"Мідії й королівські креветки у вершковому соусі під шапкою раклету.","ehIuY-xmoIw-jNxYF.png"],
+["Паста з вирізкою телятини та в’яленими томатами",690,"Фетучині, телятина, в’ялені томати, цибуля-порей, пармезан.","GjHCl-HsHTF-MGtEk.png","n"],
+["Паста з білими грибами",540,"Вершковий соус, білі гриби, пармезан.","OcjWh-VGFDT-JSjzX.png","n"],
+["Паста з швейцарським сиром Раклет",480,"Фетучині у соусі з трьох сирів, головний — Raclette Sapin.","DwBAh-uBMvH-Mjdje.png"],
+["Паста «Карбонара» із сирами Раклет",495,"Бекон, яйце і Raclette nature від Fromagerie Bächler.","KbpIj-ytnSY-ZDPgi.jpeg"],
+["Альпійська сковорода з сиром Раклет та мисливськими ковбасками",580,"Золотиста картопля, ковбаски й розплавлений раклет просто на сковороді.","CkDIy-zYGAT-gafEz.png"],
+["Форель річкова або сібас на грилі з сиром Раклет, за 100 г",370,"Риба на грилі з лимоном і міксом салату.","LyRQo-YbHIL-GryCO.png"],
+["Куряча грудка під сирним соусом «Кальвадос»",480,"З картопляним пюре та міксом салату.","duihV-NSqTA-CRsYv.png"],
+["Креветки з овочами у манго-кокосовому соусі «Calvados»",540,"Ананас, манго, кокосові вершки, броколі.","OLlHG-vTTRi-KxkfU.png"],
+["Курка з овочами у манго-кокосовому соусі «Calvados»",495,"Ананас, манго, кокосові вершки, броколі.","JFccB-bHJPF-mbWQD.png"],
+["Телятина у манго-кокосовому соусі «Calvados»",580,"Теляча вирізка, ананас, манго, броколі.","KxhEH-VbOsa-ZhTuC.png"],
+["Соковитий стейк зі свинини із запеченою картоплею",680,"Картопля з вершковим маслом і спеціями.","bubnM-kxAWH-AIopX.png"],
+["Стейк лосося на подушці з грибів, порею та броколі",690,"Запечений у пергаменті з олією на травах і лаймом.","waCwG-jvlen-yHNGo.png"],
+["🇺🇦 Філе міньйон з картоплею по-селянськи",1295,"Українська яловичина, обсмажена до досконалості.","VCDwA-nsGGr-oUsRX.png"],
+["🇦🇷 Преміальний стейк Рібай Wet Aged",1998,"Мармурова аргентинська яловичина вологого визрівання.","IZSkm-iZRIz-taeUF.jpeg"]]],
+["Гарніри",[
+["Стручкова квасоля з кунжутом",250,"Обсмажена до легкої хрусткості, з соєвим соусом.","XVhjY-aalFI-mRWJv.png"],
+["Картопля запечена",240,"До золотистої скоринки, зі спеціями та зеленню.","dGExY-RqzkV-XqrkS.png"],
+["Картопля фрі",220,"Хрустка, з кетчупом.","Peocb-CoTIe-mOyyP.jpeg"],
+["Картопляне пюре",120,"З вершковим маслом і молоком.","IRlZw-jFgAD-whxne.png"],
+["Рис відварний з кунжутом",140,"З вершковим маслом.","BEVaD-bpyDr-mhCgU.png"],
+["Овочі-гриль",420,"Цукіні, баклажан, болгарський перець, печериці, томати.","YayRn-mYubO-CSeIp.png"],
+["Хлібний кошик",80,"Два види хліба.","aACEN-klbul-sFifS.jpeg"]]],
+["Десерти",[
+["Запечене ванільне морозиво з кокосовим сиропом",415,"Фламбується ромом просто при подачі.","JFoDE-lVeJv-eJDPC.png","h"],
+["Сир Rougette на грилі з волоським горіхом та ягідним джемом",380,"Німецький Rougette Grillkäse Kräuter.","ugdMf-SfbQP-SnfFe.png","n"],
+["Ванільне морозиво з сиром Раклет та карамеллю",440,"Холодне й гаряче, солодке й солоне.","IDCyF-aywDC-ZSvAv.jpeg"],
+["Сир Раклет, запечений з ананасом, та морозиво",420,"Ананас, мед і волоські горіхи.","wDgme-ulQCj-SnBbf.jpeg"],
+["Шоколадне фондю з полуницею або сезонними фруктами",420,"Розтоплений шоколад і фрукти на вибір.","JclmE-FrdVI-IILNH.jpeg"],
+["Шоколадний фондан з ванільним морозивом",420,"Рідка шоколадна серединка та сезонні фрукти.","XtQmk-iSVRT-HNCFr.jpeg"],
+["Шоколадний торт «Моцарт»",380,"Від оксамитового мусу до хрусткого праліне.","NaWjJ-elHOW-zxMyC.png"],
+["Фірмові сирники Calvados",365,"Зі сметаною, сезонними фруктами та соусом.","rGhbJ-emXWt-nmICe.jpeg"],
+["Тістечко макарон",120,"До кави.","bNtZL-ATiso-PjMuY.jpeg"],
+["Морозиво в асортименті",95,"Пломбір, шоколад, вишня, ванільне, фісташка.","QsrCP-NdewH-MUapk.jpeg"]]],
+["Морозиво",[
+["Морозиво, 50 г",95,"","pFzxl-leUoz-VRPTC.jpeg"],
+["Морозиво «Амарена чаша»",380,"Змішане морозиво, збиті вершки, вишня Амарена.","uSqHl-jWHDe-SsfvR.jpeg"],
+["Морозиво «Італійська чаша»",480,"Збиті вершки, полуниця, ківі, банан і сироп.","QeZDn-HHlxS-dRjUP.jpeg"],
+["Морозиво «Ванільно-полуничне танго»",460,"","fjwGF-nvZHL-FbJJc.jpeg"],
+["Йогурт-морозиво апельсин",360,"Молочний йогурт, апельсин, сироп.","oNeZr-GYCpM-KFHxV.jpeg"],
+["Йогурт-морозиво полуниця-шоколад",440,"Молочний йогурт, полуниця, шоколад.","FWesX-XxjDM-jUVLk.jpeg"],
+["Йогурт-морозиво полуниця-банан",425,"Молочний йогурт, полуниця, банан.","drzLA-jVktY-FIlJJ.jpeg"]]]
+],
+drinks:[
+["Кава",[
+["Espresso",90,"","WNWBO-kTjIp-VNjgK.jpeg"],
+["Doppio (подвійний еспресо)",95,"","gQWqW-YOUqf-CYoDx.webp"],
+["Americano",95,"","sWvfK-ylphp-KQGGJ.jpeg"],
+["Cappuccino",95,"","WqPqb-EpeRX-uGayr.jpeg"],
+["Latte",105,"","iiijZ-xxjlI-yTUhR.jpeg"],
+["Flat White",120,"","qvoVp-fXIbU-rHbIR.webp"],
+["Raf Coffee",130,"Еспресо, збитий з вершками.","eDJWj-kRJvs-Ynhbj.jpeg"],
+["Orange Coffee",180,"Кава з апельсиновим соком і цедрою.","dWHjm-DTDbG-JlfHE.jpeg"],
+["Espresso Tonic",120,"Еспресо, тонік, лід і цитрус.","HcPfO-WpEZG-HSQlp.jpeg"],
+["Фраппе",110,"Холодна збита кава з льодом.","kyjBc-tTXbo-jkkli.jpeg"],
+["Капучино «Moretto»",210,"З горіхово-шоколадним лікером Moretto.","CGWzk-BJGgH-qfAAG.jpeg"],
+["Какао",120,"","erJJe-dzjeH-lVArA.jpeg"],
+["Рослинне молоко",45,"Мигдальне, соєве або кокосове.","jplzS-JUhJH-CCLIH.jpeg"],
+["Додаткове молоко до кави",25,"","apHan-zAgce-SnKGh.jpeg"],
+["Вершки",40,"","CNIyO-ANkTB-XSGJQ.jpeg"]]],
+["Чай",[
+["Чай «Малина — м’ята»",180,"Авторський чай.","sWbrK-IfFll-vUsmD.jpeg"],
+["Чай «Обліпиха — імбир»",180,"Авторський чай.","QkiJk-vYDoC-FasEb.jpeg"],
+["Чай «Імбир & лемонграс»",180,"Авторський чай.","bGDLA-JrtbW-EKqCJ.jpeg"],
+["Цитрусовий чай",180,"Апельсин, лимон і грейпфрут.","NIOVG-gkTfS-bIZyP.jpeg"],
+["Апельсиново-м’ятний чай",180,"Авторський чай.","DMhIH-lDEkn-HYTyl.jpeg"],
+["Чай в асортименті",170,"Чорний, зелений, трав’яний, фруктовий — у чайничку на дві чашки.","CGlje-vviBk-esvpR.jpeg"],
+["Додатки до чаю: мед, лимон",40,"","PrQsl-OCFkN-HoHYr.jpeg"]]],
+["Фреші",[
+["Апельсиново-грейпфрутовий фреш",275,"","xWaIk-RGlrH-eflda.jpeg"],
+["Фреш із грейпфрута",290,"","bsygV-JbbHJ-VGHaU.jpeg"],
+["Фреш із апельсина",260,"","GkmdQ-KTdlF-ydtNF.jpeg"],
+["Яблучний фреш",220,"","ePiiR-mGBlF-COVWI.jpeg"],
+["Яблучно-морквяний фреш",215,"","oEBIK-zpRGl-uoYzc.jpeg"],
+["Морквяний фреш",210,"","Ckcax-QmCVP-pIakN.jpeg"]]],
+["Безалкогольні коктейлі",[
+["Авторські лимонади в асортименті",200,"Малина-маракуя та інші смаки.","xGrka-EQKvz-FdJgG.png"],
+["Авторські лимонади в асортименті, 1 л",490,"","GXyeG-xKqmZ-ujDvg.png"],
+["Класичний мохіто б/а",200,"Лайм, м’ята, газована основа.","elIYq-eljGl-AlwGf.png"],
+["Мілк-шейк класичний",235,"Молоко і ванільне морозиво.","nenXD-eFCwI-CvFyi.png"],
+["Мілк-шейк полуничний",235,"","KWceh-mFHbf-bFFBX.png"],
+["Мілк-шейк банановий",235,"","yBEjl-vlSGh-tJkWl.png"]]],
+["Безалкогольні напої",[
+["Моршинська у склі",120,"","UeJld-ceyRM-HGFPs.jpeg"],
+["Узвар домашній",85,"","RWHuS-bZFlz-nscBA.webp"],
+["Coca-Cola / Pepsi",140,"","vtgvz-ebNui-AAhdB.jpeg"],
+["Schweppes",120,"","VhPwV-WqTDy-dMzkX.png"],
+["Соки в асортименті",90,"","uZowC-BoHUL-NcndI.jpeg"]]]
+],
+bar:[
+["Кальвадос",[
+["🇺🇦 Кальвадос яблучний «Прикарпатський»",160,"Традиційний український фруктовий бренді."],
+["🇺🇦 Кальвадос грушевий «Прикарпатський», 40%",160,"Фруктовий бренді з характером Карпат."],
+["🇫🇷 Coquerel VS, 40%",380,"Класична серія, Нормандія."],
+["🇫🇷 Coquerel VSOP, 40%",450,"Легендарний кальвадос Maison Coquerel."],
+["🇫🇷 Coquerel XO, 40%",585,"Лімітована серія."],
+["🇫🇷 Coquerel Rhum Finish, 5 років, 41%",480,"Витримка у бочках з-під рому."],
+["🇫🇷 Coquerel Bourbon Finish, 4 роки, 41%",480,"Витримка у бочках з-під бурбону."],
+["🇫🇷 Coquerel Port Finish, 5 років, 40,7%",510,"Колекція Cask Finish."],
+["🇫🇷 Coquerel 15 років, 42%",870,"Limited Edition."],
+["🇫🇷 Coquerel 20 років, 42%",1020,"Limited Edition. Рідкісний і витончений."],
+["🇫🇷 Daron Fine, 40%",380,"Класичний кальвадос."],
+["🇫🇷 Christian Drouin Sélection, 40%",380,"Від легендарного дому Drouin."]]],
+["Коктейлі на кальвадосі",[
+["Calvados Sour",260,"Класичний сауер на кальвадосі."],
+["Calvados Rose",270,"Легкий і яскравий."],
+["Calvados Spritz",280,"Spritz у кальвадосному стилі."],
+["Calvados Tonic",280,"Кальвадос і тонік."],
+["Strawberry Spring",290,"Фруктовий коктейль на кальвадосі.","","n"]]],
+["Коктейлі",[
+["Creamy Peach",290,"Оксамитовий коктейль зі смаком стиглого персика.","","n"],
+["Red Velvet",320,"Авторський коктейль з ягідним характером.","","n"],
+["Purple Garden",330,"Квіткові ноти лаванди.","","n"],
+["Беліні (персик / малина / полуниця)",310,"Італійська класика на просекко.","","n"],
+["Honey Sour",325,"Медовий сауер.","","n"],
+["Mango Flame",310,"Яскравий тропічний коктейль."],
+["Negroni",290,"Джин, Martini Rosso, біттер, цедра."],
+["Aperol Spritz",320,"Prosecco, Aperol, содова, апельсин."],
+["Green Mexican",240,"Лікер Pisang, лимонний фреш, текіла."],
+["B-52",240,"Baileys, кавовий лікер, трипл-сек."],
+["Margarita",310,"Класика з текілою."],
+["Мохіто класичний",280,"Ром, Sprite, м’ята, лайм."],
+["Long Island Iced Tea",360,""],
+["Piña Colada",320,"Ром, кокос і ананас."],
+["Tropical Kiss",310,"Ром, маракуйя, ананас, лимон."],
+["Rosemary Gin",320,"Джин, грейпфрут, бузина, розмарин."],
+["Hugo",280,"Prosecco, бузина, лайм, м’ята."],
+["Gin & Tonic",280,"Джин, тонік, лайм."],
+["Malibu Sunrise",340,"Ром, лайм, апельсиновий сік, гренадин."]]],
+["Гарячі коктейлі",[
+["Глінтвейн на червоному вині",220,""],
+["Глінтвейн на білому вині",220,""],
+["Тепле яблуко (Warm Apple)",210,"Кальвадос «Прикарпатський» і яблучний сік."],
+["Citrus Punch",220,"Кальвадос або ром, апельсиновий сік."],
+["Irish Coffee",210,"Ірландський віскі, кава, вершки."],
+["Cranberry Grog",210,"Ром, журавлина, мед, прянощі."],
+["Hot Orange Jägermeister",210,"Jägermeister, апельсиновий сік, прянощі."]]],
+["Ігристі вина",[
+["🇺🇦 Bolgrad Vintage Brut 1821, 11%",210,"Болград, Одеська область."],
+["🇮🇹 Prosecco DOC Extra Dry Terra Serena",1400,"Біле екстрасухе, Італія."],
+["🇪🇸 Cava Brut «Gran Ducay»",1600,"Біле брют, Іспанія."],
+["Фруктова тарілка",600,"Фрукти по сезону."]]],
+["Вина білі та рожеві",[
+["🇳🇿 Sauvignon Blanc Marlborough Sun",370,"Сухе біле, Нова Зеландія."],
+["🇮🇹 Pinot Grigio «Marchesi Ervani»",340,"Сухе біле, Венето."],
+["🇩🇪 St. Gabriel Gewürztraminer",350,"Напівсолодке біле, Пфальц."],
+["🇩🇪 St. Gabriel Riesling",310,"Сухе біле, Пфальц."],
+["🇫🇷 Rosé d’Anjou",410,"Напівсухе рожеве, долина Луари."]]],
+["Вина червоні",[
+["🇺🇸 Feral Roots Zinfandel",380,"Сухе червоне, Каліфорнія."],
+["🇮🇹 Lucere Chianti DOCG",360,"Сухе червоне, Тоскана."],
+["🇪🇸 Celebrities Syrah",330,"Сухе червоне, Кастилія-Ла-Манча."]]],
+["Пиво",[
+["Carlsberg світле, на розлив","140 / 160",""],
+["Grimbergen Blond, на розлив","160 / 180",""],
+["Grimbergen Double-Ambrée темне, з/б",190,""],
+["Grimbergen Blanche, з/б",190,""],
+["Kronenbourg 1664 Blanc",170,""],
+["Corona Extra",160,""],
+["Carlsberg Pilsner безалкогольне",150,""]]],
+["Віскі",[
+["Jameson Irish Whiskey, 40%",240,"Ірландія."],
+["Jack Daniel’s Old No. 7, 40%",245,"Теннессі, США."]]],
+["Інший алкоголь",[
+["Горілка Absolut, 40%",190,"Швеція."],
+["Горілка «Козацька Рада» Класична, 40%",140,"Україна."],
+["Джин Beefeater, 40%",220,"Лондонський сухий джин."],
+["Текіла Sierra Silver",240,"Мексика."],
+["Jägermeister",180,"Німеччина."],
+["Becherovka",180,"Чехія."],
+["Ром Bacardi Gold, 40%",180,"Пуерто-Рико."],
+["Martini Bianco",180,"Італія."]]]
+]};
+
+const POP=[
+["menu/DpJeukk-LVLwsMh-sGGCScZ.webp","🇫🇷 Раклет з пажитником","Зріз із голови сиру",1080],
+["menu/TejPCmD-BSuFacy-nHnnPWj.webp","🇨🇭 Raclette Sapin","Зріз із голови сиру",860],
+["menu/MxvsHhr-kTXhZlX-kCtzDPn.webp","🇨🇭 Raclette St. Niklaus","Зріз із голови сиру",990],
+["menu/cQvTGli-vHWytJe-JAAVybC.webp","🇨🇭 Raclette St. Niklaus","У модульній сковорідці",460]];
+const GAL=["mGbmJ-JbjGB-trcSi.jpeg","kqUpZ-GyjCF-DCNAY.png","yFAyb-GLuQy-hfQrV.jpeg","daMWR-zFeQO-QNvLd.jpeg","NjeGq-RsJTZ-jgUkH.png","fhJRH-WOyGI-QKFJg.jpeg"];
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=p=>(typeof p==="number"?String(p).replace(/\B(?=(\d{3})+(?!\d))/g," "):p)+" ₴";
+/* flag emoji render as bare letters on Windows: turn them into a consistent country tag */
+const flag=s=>esc(s).replace(/([\u{1F1E6}-\u{1F1FF}]{2})\s*/gu,f=>`<span class="cc">${[...f.trim()].map(c=>String.fromCharCode(c.codePointAt(0)-0x1F1E6+65)).join("")}</span>`);
+const hideBroken='onerror="this.style.visibility=\'hidden\'"';
+
+$("#pop").innerHTML=POP.map(([img,n,s,p])=>`<article class="pcard rv"><div class="ph"><img loading="lazy" src="${CDN+img}" alt="${esc(n)}" ${hideBroken}></div><div class="tx"><div class="nm">${flag(n)}</div><div class="sb">${esc(s)}</div><div class="pr">${fmt(p)}</div></div></article>`).join("");
+$("#gal").innerHTML=GAL.map(g=>`<figure><img loading="lazy" src="${CDN}template-gallery/thumbnail_${g}" alt="Ресторан Раклет & Кальвадос" ${hideBroken}></figure>`).join("");
+$("#cvlist").innerHTML=MENU.bar[0][1].map(([n,p])=>`<div class="cvrow"><b>${flag(n)}</b><span>${fmt(p)}</span></div>`).join("");
+
+let tab="kitchen";
+function itemHTML([n,p,d,img,b]){
+  const badge=b==="h"?'<span class="bd h">ХІТ</span>':b==="n"?'<span class="bd n">НОВЕ</span>':"";
+  const th=img?`<img class="th" loading="lazy" src="${TH+img}" alt="" ${hideBroken}>`:"";
+  return `<div class="it${img?"":" noimg"}">${th}<div><div class="nm">${badge}${flag(n)}</div>${d?`<div class="ds">${esc(d)}</div>`:""}</div><div class="pr">${fmt(p)}</div></div>`;
+}
+function render(){
+  const q=$("#q").value.trim().toLowerCase();
+  let groups;
+  if(q){
+    groups=[];
+    for(const k of ["kitchen","drinks","bar"]) for(const [c,its] of MENU[k]){
+      const f=its.filter(i=>(i[0]+" "+(i[2]||"")).toLowerCase().includes(q));
+      if(f.length) groups.push([c,f]);
+    }
+  }else groups=MENU[tab];
+  $("#chips").innerHTML=groups.map(([c],i)=>`<button class="chip" data-i="${i}">${esc(c)}</button>`).join("");
+  $("#list").innerHTML=groups.length?groups.map(([c,its],i)=>`<div class="cat" id="cat-${i}"><h3>${esc(c)} <small>${its.length}</small></h3>${!q&&tab==="bar"&&i===0?'<p class="cnote">Ціни — як у барній карті закладу. Продаж алкоголю — особам від 18 років.</p>':""}<div class="items">${its.map(itemHTML).join("")}</div></div>`).join(""):`<p class="empty">Нічого не знайшли. Спробуйте інше слово.</p>`;
+  $$(".chip").forEach(b=>b.onclick=()=>document.getElementById("cat-"+b.dataset.i).scrollIntoView({behavior:"smooth"}));
+}
+function setTab(t){tab=t;$("#q").value="";$$(".tab").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));render();}
+$$(".tab").forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+$("#q").addEventListener("input",()=>{$$(".tab").forEach(b=>b.classList.toggle("on",!$("#q").value&&b.dataset.tab===tab));render();});
+$$("[data-open]").forEach(a=>a.addEventListener("click",()=>setTab(a.dataset.open)));
+render();
+
+addEventListener("scroll",()=>$("#hdr").classList.toggle("solid",scrollY>30),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.08});
+$$(".rv").forEach(el=>io.observe(el));
+</script>
+
+<script type="module">
+/* ---------- 3D: half wheel of raclette melting under the heater ---------- */
+import * as THREE from 'three';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const stage=document.getElementById('stage');
+const hero=document.getElementById('top');
+let W=stage.clientWidth,H=stage.clientHeight;
+
+let renderer;
+try{renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});}catch(e){throw new Error('no webgl');}
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,W<700?1.5:1.75));
+renderer.setSize(W,H);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.0;
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+
+const BG=0x0b0806;
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(BG);
+scene.fog=new THREE.Fog(BG,11,22);
+const pm=new THREE.PMREMGenerator(renderer);
+scene.environment=pm.fromScene(new RoomEnvironment(),0.04).texture;
+scene.environmentIntensity=0.3;
+
+const camera=new THREE.PerspectiveCamera(30,W/H,0.1,60);
+
+/* ---- procedural textures ---- */
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function ctex(w,h,draw,rep){
+  const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=8;
+  if(rep){t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rep[0],rep[1]);}
+  return t;
+}
+function speckle(g,w,h,n,dark,light){
+  for(let i=0;i<n;i++){g.fillStyle=Math.random()<.5?`rgba(${dark},${rnd(.05,.25)})`:`rgba(${light},${rnd(.04,.16)})`;g.fillRect(rnd(0,w),rnd(0,h),rnd(1,3),rnd(1,3));}
+}
+const rindTex=ctex(512,512,(g,w,h)=>{
+  g.fillStyle='#a5561b';g.fillRect(0,0,w,h);speckle(g,w,h,9000,'60,25,5','255,190,110');
+  g.strokeStyle='rgba(40,15,0,.12)';
+  for(let y=0;y<h;y+=6){g.beginPath();g.moveTo(0,y+rnd(-1,1));g.lineTo(w,y+rnd(-1,1));g.stroke();}
+  for(let x=0;x<w;x+=6){g.beginPath();g.moveTo(x+rnd(-1,1),0);g.lineTo(x+rnd(-1,1),h);g.stroke();}
+},[3,3]);
+const capTex=ctex(512,512,(g,w,h)=>{g.fillStyle='#d49a4c';g.fillRect(0,0,w,h);speckle(g,w,h,7000,'110,60,15','255,225,160');},[2,2]);
+const cutTex=ctex(1024,512,(g,w,h)=>{
+  const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#f8de95');gr.addColorStop(1,'#eec25a');g.fillStyle=gr;g.fillRect(0,0,w,h);
+  for(let i=0;i<2500;i++){g.fillStyle=`rgba(${Math.random()<.5?'200,140,40':'255,245,200'},${rnd(.03,.12)})`;g.beginPath();g.arc(rnd(0,w),rnd(0,h),rnd(.5,2.5),0,7);g.fill();}
+  for(let i=0;i<14;i++){const x=rnd(40,w-40),y=rnd(40,h-40),r=rnd(4,12);g.fillStyle='rgba(176,118,30,.55)';g.beginPath();g.ellipse(x,y,r*1.4,r,0,0,7);g.fill();}
+  g.strokeStyle='#b8681f';g.lineWidth=16;g.strokeRect(0,0,w,h);
+});
+const woodTex=ctex(1024,512,(g,w,h)=>{
+  g.fillStyle='#5a3920';g.fillRect(0,0,w,h);
+  for(let i=0;i<240;i++){const y0=rnd(0,h),a=rnd(2,10),f=rnd(.004,.012),ph=rnd(0,6);
+    g.strokeStyle=`rgba(${Math.random()<.5?'28,14,5':'160,108,64'},${rnd(.06,.22)})`;g.lineWidth=rnd(.6,2.4);g.beginPath();
+    for(let x=0;x<=w;x+=8){const y=y0+Math.sin(x*f+ph)*a;x?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();}
+});
+const puffTex=ctex(64,64,(g)=>{const r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,'rgba(255,240,220,1)');r.addColorStop(1,'rgba(255,240,220,0)');g.fillStyle=r;g.fillRect(0,0,64,64);});
+
+/* ---- materials ---- */
+const M={
+  rind:new THREE.MeshStandardMaterial({map:rindTex,bumpMap:rindTex,bumpScale:2,roughness:.8}),
+  cap:new THREE.MeshStandardMaterial({map:capTex,bumpMap:capTex,bumpScale:1.4,roughness:.72}),
+  cut:new THREE.MeshStandardMaterial({map:cutTex,roughness:.55}),
+  melt:new THREE.MeshPhysicalMaterial({color:0xf2b23a,emissive:0x5a2600,emissiveIntensity:.4,roughness:.24,clearcoat:1,clearcoatRoughness:.16,sheen:.5,sheenColor:new THREE.Color(0xffe2a6),side:THREE.DoubleSide}),
+  wood:new THREE.MeshStandardMaterial({map:woodTex,roughness:.82}),
+  iron:new THREE.MeshStandardMaterial({color:0x1d1b19,roughness:.5,metalness:.8}),
+  steel:new THREE.MeshStandardMaterial({color:0x8a8885,roughness:.32,metalness:.9}),
+  coil:new THREE.MeshStandardMaterial({color:0x260900,emissive:0xff4d14,emissiveIntensity:5,roughness:.4}),
+  potato:new THREE.MeshStandardMaterial({color:0xd7a254,roughness:.62,bumpMap:capTex,bumpScale:1.2}),
+  pickle:new THREE.MeshStandardMaterial({color:0x4d6a20,roughness:.45,bumpMap:rindTex,bumpScale:1}),
+  tomato:new THREE.MeshPhysicalMaterial({color:0xc21f0e,roughness:.16,clearcoat:1})
+};
+const shadowy=m=>{m.castShadow=true;m.receiveShadow=true;return m;};
+
+/* ---- rig ---- */
+const rig=new THREE.Group();scene.add(rig);
+const R=1.5,HH=.78,ALPHA=-2.0;
+
+// half wheel: D-shape extruded, cut face = flat side (local y=0), tilted toward the heater
+const shape=new THREE.Shape();shape.moveTo(-R,0);shape.absarc(0,0,R,Math.PI,0,true);shape.lineTo(-R,0);
+const wheel=new THREE.Group();wheel.position.set(0,.25,-.25);wheel.rotation.x=ALPHA;rig.add(wheel);
+wheel.add(shadowy(new THREE.Mesh(new THREE.ExtrudeGeometry(shape,{depth:HH,bevelEnabled:true,bevelThickness:.05,bevelSize:.05,bevelSegments:4,curveSegments:80}),[M.cap,M.rind])));
+const cut=new THREE.Mesh(new THREE.PlaneGeometry(2*R,HH),M.cut);cut.rotation.x=Math.PI/2;cut.position.set(0,-.052,HH/2);wheel.add(cut);
+
+// bubbling melted layer on the cut face
+const meltGeo=new THREE.PlaneGeometry(2*R*.95,HH*.9,96,28);
+const meltBase=meltGeo.attributes.position.array.slice();
+const meltLayer=new THREE.Mesh(meltGeo,M.melt);meltLayer.rotation.x=Math.PI/2;meltLayer.position.set(0,-.058,HH/2);wheel.add(meltLayer);
+
+// geometry helpers in rig space
+const nOut=new THREE.Vector3(0,-1,0).applyEuler(wheel.rotation);
+const edge0=new THREE.Vector3(0,-.07,.02).applyEuler(wheel.rotation).add(wheel.position);
+const faceC=new THREE.Vector3(0,-.06,HH/2).applyEuler(wheel.rotation).add(wheel.position);
+const LIP=.2, landZ=edge0.z+nOut.z*LIP, LAND_Y=-1.02, LMAX=edge0.y+nOut.y*LIP-LAND_Y;
+
+// board + pan + garnish
+const board=shadowy(new THREE.Mesh(new RoundedBoxGeometry(4.8,.16,3.3,4,.07),M.wood));board.position.set(0,-1.6,landZ-.1);rig.add(board);
+const pan=new THREE.Group();pan.position.set(0,-1.45,landZ+.12);rig.add(pan);
+pan.add(shadowy(new THREE.Mesh(new THREE.CylinderGeometry(1.45,1.32,.14,72),M.iron)));
+const rim=shadowy(new THREE.Mesh(new THREE.TorusGeometry(1.45,.045,12,96),M.iron));rim.rotation.x=Math.PI/2;rim.position.y=.07;pan.add(rim);
+const potGeo=new THREE.SphereGeometry(1,32,20);
+[[-.78,.18],[-.36,.42],[.08,.08],[.52,.42],[.88,.02],[-.22,-.32],[.46,-.34],[-.92,-.36],[.02,.62]].forEach(([x,z])=>{
+  const m=shadowy(new THREE.Mesh(potGeo,M.potato));m.scale.set(rnd(.24,.3),rnd(.18,.22),rnd(.22,.28));m.position.set(x,.24,z);m.rotation.set(rnd(0,3),rnd(0,3),rnd(0,3));pan.add(m);});
+const pickGeo=new THREE.CapsuleGeometry(.065,.26,6,12);
+[[-1.08,.5,.6],[1.02,.55,-.5],[-1.12,-.2,1.2],[1.15,-.1,2.1]].forEach(([x,z,ry])=>{const m=shadowy(new THREE.Mesh(pickGeo,M.pickle));m.rotation.set(0,ry,Math.PI/2);m.position.set(x,.15,z);pan.add(m);});
+const tomGeo=new THREE.SphereGeometry(.12,24,16);
+[[.98,-.58],[-.6,.8],[1.12,.32],[-.5,-.75]].forEach(([x,z])=>{const m=shadowy(new THREE.Mesh(tomGeo,M.tomato));m.position.set(x,.19,z);pan.add(m);});
+
+// melted cheese pooling on potatoes
+const poolGeo=new THREE.SphereGeometry(1,72,20,0,Math.PI*2,0,Math.PI/2);
+{const p=poolGeo.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),a=Math.atan2(z,x),r=1+.16*Math.sin(a*5+1.3)+.09*Math.sin(a*11+.4);p.setXYZ(i,x*r,y,z*r);}poolGeo.computeVertexNormals();}
+const pool=shadowy(new THREE.Mesh(poolGeo,M.melt));pool.position.set(0,.3,-.12);pan.add(pool);
+let poolT=.35,poolS=.35;
+
+// machine: posts, rod, heater
+const postGeo=new THREE.CylinderGeometry(.045,.045,2.95,16);
+[-1,1].forEach(sx=>{
+  const p=shadowy(new THREE.Mesh(postGeo,M.steel));p.position.set(sx*1.9,-.08,-.4);rig.add(p);
+  const a=shadowy(new THREE.Mesh(new THREE.CylinderGeometry(.04,.04,.8,16),M.steel));a.rotation.x=Math.PI/2;a.position.set(sx*1.9,1.36,-.05);rig.add(a);
+});
+const rod=shadowy(new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,3.8,16),M.steel));rod.rotation.z=Math.PI/2;
+rod.position.copy(new THREE.Vector3(0,R*.35,HH/2).applyEuler(wheel.rotation).add(wheel.position));rig.add(rod);
+const heater=new THREE.Group();heater.position.set(0,1.2,.33);heater.rotation.x=.6;rig.add(heater);
+heater.add(shadowy(new THREE.Mesh(new RoundedBoxGeometry(3.8,.2,.66,4,.06),M.steel)));
+{const pts=[];for(let i=0;i<=240;i++){const t=i/240;pts.push(new THREE.Vector3(-1.65+3.3*t,-.13,Math.sin(t*Math.PI*28)*.17));}
+ heater.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),900,.019,8,false),M.coil));}
+
+/* ---- lights ---- */
+scene.add(new THREE.HemisphereLight(0xffe7c4,0x140a05,.45));
+const key=new THREE.DirectionalLight(0xffe2c0,2.1);key.position.set(-3.5,5,4.5);key.castShadow=true;
+key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:.5,far:20});key.shadow.bias=-.0005;key.shadow.radius=4;scene.add(key);
+const rimL=new THREE.DirectionalLight(0x9fb6ff,1.1);rimL.position.set(3.5,2.5,-4.5);scene.add(rimL);
+const heat=new THREE.SpotLight(0xff8a3c,38,7,.95,.75,1.5);heat.position.set(0,1.05,.25);heat.target.position.copy(faceC);rig.add(heat,heat.target);
+const glow=new THREE.PointLight(0xff6a24,6,3,2);glow.position.set(0,.95,.35);rig.add(glow);
+
+/* ---- hanging cheese sheets (scraped layer) ---- */
+const SU=56,SV=42,SW=2*R*.9;
+function makeSheet(){
+  const geo=new THREE.PlaneGeometry(1,1,SU,SV);
+  const mat=M.melt.clone();mat.transparent=true;
+  const m=new THREE.Mesh(geo,mat);m.castShadow=true;m.frustumCulled=false;m.visible=false;rig.add(m);
+  return {m,geo,mat,state:'idle',t:0,L:.04,drop:0,vy:0,seed:rnd(0,10)};
+}
+const sheets=[makeSheet(),makeSheet()];
+function startSheet(s){Object.assign(s,{state:'grow',t:0,L:.04,drop:0,vy:0,seed:rnd(0,10)});s.mat.opacity=1;s.m.visible=true;}
+startSheet(sheets[0]);
+function shapeSheet(s,time){
+  const a=s.geo.attributes.position.array;let k=0;
+  for(let j=0;j<=SV;j++){
+    const v=j/SV;
+    for(let i=0;i<=SU;i++){
+      const u=i/SU-.5;
+      const lf=Math.max(.18,1+.2*Math.sin(u*9+s.seed)+.11*Math.sin(u*23+s.seed*2.3)-.4*Math.pow(Math.abs(u*2),4));
+      const L=s.L*lf;
+      const w=SW*(1-.24*v*v*Math.min(1,s.L/LMAX));
+      const out=LIP*(1-Math.exp(-6*v*Math.max(L,.05)))+Math.sin(v*7-time*2.2+u*4+s.seed)*.028*v*L;
+      a[k++]=edge0.x+u*w;
+      a[k++]=edge0.y+nOut.y*out-L*v+s.drop;
+      a[k++]=edge0.z+nOut.z*out;
+    }
+  }
+  s.geo.attributes.position.needsUpdate=true;s.geo.computeVertexNormals();
+}
+const GROW=4.4,FALL=1.1;
+function stepSheets(dt,time){
+  sheets.forEach((s,n)=>{
+    if(s.state==='grow'){
+      s.t+=dt;const p=Math.min(1,s.t/GROW),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+      s.L=.04+(LMAX-.04)*e;
+      if(p>=1){s.state='fall';s.t=0;s.vy=0;startSheet(sheets[1-n]);}
+    }else if(s.state==='fall'){
+      s.t+=dt;s.vy+=dt*4.5;s.drop-=s.vy*dt;s.L=Math.max(.02,LMAX+s.drop);
+      s.mat.opacity=Math.max(0,1-Math.pow(s.t/FALL,2));
+      if(s.t>=FALL||s.L<=.02){s.state='idle';s.m.visible=false;poolT=Math.min(1,poolT+.13);}
+    }
+    if(s.state!=='idle')shapeSheet(s,time);
+  });
+}
+
+/* ---- steam ---- */
+const NP=120,sp=new Float32Array(NP*3),life=new Float32Array(NP);
+function resetP(i,init){sp[i*3]=rnd(-1.3,1.3);sp[i*3+1]=faceC.y+rnd(-.1,.25);sp[i*3+2]=faceC.z+rnd(0,.45);life[i]=init?Math.random():0;}
+for(let i=0;i<NP;i++)resetP(i,true);
+const spGeo=new THREE.BufferGeometry();spGeo.setAttribute('position',new THREE.BufferAttribute(sp,3));
+const steam=new THREE.Points(spGeo,new THREE.PointsMaterial({map:puffTex,size:.42,transparent:true,opacity:.09,depthWrite:false,blending:THREE.AdditiveBlending,color:0xffe7cc}));
+rig.add(steam);
+
+/* ---- post ---- */
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new THREE.Vector2(W,H),.5,.55,.86);composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+/* ---- layout / camera ---- */
+const base=new THREE.Vector3(),look=new THREE.Vector3(0,-.35,0);
+function layout(){
+  W=stage.clientWidth;H=stage.clientHeight;const asp=W/H;
+  if(asp>1.1){rig.position.set(asp>1.6?1.55:1.05,0,0);camera.fov=27;base.set(0,1.1,10.2);}
+  else{rig.position.set(0,1.05,0);camera.fov=36;base.set(0,1.2,asp<.7?13.8:11.5);}
+  camera.aspect=asp;camera.updateProjectionMatrix();
+  renderer.setSize(W,H);composer.setSize(W,H);bloom.setSize(W,H);
+}
+layout();
+new ResizeObserver(layout).observe(stage);
+
+let mx=0,my=0;
+addEventListener('pointermove',e=>{mx=e.clientX/innerWidth*2-1;my=e.clientY/innerHeight*2-1;},{passive:true});
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let visible=true;new IntersectionObserver(([e])=>{visible=e.isIntersecting;}).observe(stage);
+
+/* ---- loop ---- */
+const clock=new THREE.Clock();let time=0,first=true;
+const camPos=new THREE.Vector3();
+renderer.setAnimationLoop(()=>{
+  const dt=Math.min(clock.getDelta(),.05);
+  if(!visible)return;
+  time+=reduce?dt*.4:dt;
+
+  // bubbling melted face
+  const a=meltGeo.attributes.position.array;
+  for(let i=0;i<a.length;i+=3){
+    const x=meltBase[i],y=meltBase[i+1],e=(y+HH*.45)/(HH*.9);
+    const n=Math.sin(x*5.1+time*1.7)*Math.sin(y*7.3-time*1.3)*.5+Math.sin(x*11.3-time*2.1+y*3.7)*.3+Math.sin(x*2.3+y*13.1+time*.9)*.2;
+    const b=Math.max(0,n);
+    a[i+2]=.012+.03*b*b+.05*Math.pow(1-e,2);
+  }
+  meltGeo.attributes.position.needsUpdate=true;meltGeo.computeVertexNormals();
+
+  stepSheets(dt,time);
+  poolS+=(poolT-poolS)*Math.min(1,dt*1.5);
+  const br=1+Math.sin(time*1.3)*.015;
+  pool.scale.set(1.05*poolS*br,.11+.07*poolS,.8*poolS*br);
+
+  for(let i=0;i<NP;i++){life[i]+=dt*.22;sp[i*3+1]+=dt*(.25+life[i]*.3);sp[i*3]+=Math.sin(time*.8+i)*dt*.12;if(life[i]>1)resetP(i,false);}
+  spGeo.attributes.position.needsUpdate=true;
+
+  heat.intensity=34+5*Math.sin(time*6.1)*Math.sin(time*2.3);
+  M.coil.emissiveIntensity=4.6+.5*Math.sin(time*5.3);
+
+  const r=hero.getBoundingClientRect();const p=Math.min(1,Math.max(0,-r.top/r.height));
+  rig.rotation.y=-.18+Math.sin(time*.22)*.22+p*.55;
+  camPos.set(base.x+mx*.7,base.y-my*.35+p*.8,base.z-p*2.4);
+  camera.position.lerp(camPos,first?1:.06);
+  camera.lookAt(look.x+rig.position.x*.35,look.y+rig.position.y*.6,look.z);
+
+  composer.render();
+  if(first){first=false;document.documentElement.classList.add('gl-on');}
+});
+</script>
+</body>
+</html>
