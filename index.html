@@ -805,9 +805,9 @@ let visible=true;new IntersectionObserver(([e])=>{visible=e.isIntersecting;}).ob
 /* ---- loop ---- */
 const clock=new THREE.Clock();let time=0,first=true;
 const camPos=new THREE.Vector3();
-renderer.setAnimationLoop(()=>{
-  const dt=Math.min(clock.getDelta(),.05);
-  if(!visible)return;
+function frame(stepDt){
+  const dt=stepDt??Math.min(clock.getDelta(),.05);
+  if(!visible&&stepDt==null)return;
   time+=reduce?dt*.4:dt;
 
   // bubbling melted face
@@ -839,7 +839,10 @@ renderer.setAnimationLoop(()=>{
 
   composer.render();
   if(first){first=false;document.documentElement.classList.add('gl-on');}
-});
+}
+renderer.setAnimationLoop(()=>frame());
+/* manual stepping, used for checking the scene when the tab is in the background */
+window.__raclette={step:(n=1,dt=1/30)=>{for(let i=0;i<n;i++)frame(dt);return time.toFixed(2);}};
 </script>
 </body>
 </html>
